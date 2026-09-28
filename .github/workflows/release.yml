@@ -1,0 +1,112 @@
+name: Release VR mod
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag (vMAJOR.MINOR.PATCH; existing or new)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.version }}
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v5
+
+      - name: Select release revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF" == 'refs/heads/main' ]] || {
+            echo 'Run releases from main.' >&2
+            exit 1
+          }
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo 'Release tags must use vMAJOR.MINOR.PATCH.' >&2
+            exit 1
+          }
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" > /dev/null; then
+            git fetch --no-tags origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+            git checkout --detach "$RELEASE_TAG"
+          else
+            echo 'CREATE_TAG=1' >> "$GITHUB_ENV"
+          fi
+
+      - name: Check mod version
+        shell: bash
+        run: |
+          set -euo pipefail
+          mod_version="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          [[ "$mod_version" == "${RELEASE_TAG#v}" ]] || {
+            echo "gradle.properties mod_version ($mod_version) does not match $RELEASE_TAG" >&2
+            exit 1
+          }
+          archive_name="$(sed -n 's/^archives_base_name=//p' gradle.properties)"
+          [[ "$archive_name" == 'zbk-vivecraft-offhand-aim' ]] || {
+            echo "Unexpected archives_base_name: $archive_name" >&2
+            exit 1
+          }
+          echo "ASSET=build/libs/${archive_name}-${mod_version}.jar" >> "$GITHUB_ENV"
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Build mod
+        shell: bash
+        run: ./gradlew clean build --no-daemon
+
+      - name: Verify installable JAR
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$ASSET"
+          python3 - "$ASSET" "${RELEASE_TAG#v}" <<'PY'
+          import json
+          import sys
+          from zipfile import ZipFile
+
+          with ZipFile(sys.argv[1]) as packaged:
+              names = set(packaged.namelist())
+              required = {
+                  "fabric.mod.json", "LICENSE.md", "NOTICE", "MEDIA_PERMISSION.md",
+                  "LICENSES/CC-BY-NC-4.0.txt",
+                  "LICENSES/PolyForm-Noncommercial-1.0.0.txt",
+              }
+              missing = required - names
+              if missing:
+                  raise SystemExit(f"Release JAR is missing: {sorted(missing)}")
+              metadata = json.loads(packaged.read("fabric.mod.json"))
+              if metadata["version"] != sys.argv[2]:
+                  raise SystemExit("JAR mod version does not match release tag")
+              if any("AGENTS.md" in name or "/.codex/" in name for name in names):
+                  raise SystemExit("Release JAR contains local-only files")
+              print(f"Validated {sys.argv[1]}: {len(names)} entries")
+          PY
+
+      - name: Create tag for new release
+        if: env.CREATE_TAG == '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git tag "$RELEASE_TAG"
+          git push origin "refs/tags/$RELEASE_TAG"
+
+      - name: Publish GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$RELEASE_TAG" "$ASSET" \
+            --title "ZBK VR Mod $RELEASE_TAG" \
+            --generate-notes \
+            --verify-tag

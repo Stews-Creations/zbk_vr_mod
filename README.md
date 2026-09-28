@@ -35,6 +35,10 @@ build/libs/zbk-vivecraft-offhand-aim-0.3.0.jar
 
 The accompanying `-sources.jar` is for development, not installation. Both JARs include the license texts, attribution notice, and media permission. Build output and dependency caches are ignored; required wrapper files remain tracked.
 
+### Release
+
+The [release workflow](.github/workflows/release.yml) builds the mod with Java 25 and publishes only the installable JAR as a GitHub release asset. From the repository's Actions tab, run **Release VR mod** on `main` and enter a tag such as `v0.3.0`. The tag version must match `mod_version` in `gradle.properties`. For a new tag, the workflow builds and verifies the JAR before creating the tag and release. An existing tag selects that tagged revision. The sources JAR is built for development but is not attached to the release.
+
 ## Install
 
 1. Close Minecraft. Use a Fabric client profile with the Minecraft and Vivecraft versions listed above.
