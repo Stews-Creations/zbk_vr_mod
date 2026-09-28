@@ -73,7 +73,7 @@ jobs:
           with ZipFile(sys.argv[1]) as packaged:
               names = set(packaged.namelist())
               required = {
-                  "fabric.mod.json", "LICENSE.md", "NOTICE", "MEDIA_PERMISSION.md",
+                  "fabric.mod.json", "LICENSES/LICENSE.md", "LICENSES/NOTICE", "LICENSES/MEDIA_PERMISSION.md",
                   "LICENSES/CC-BY-NC-4.0.txt",
                   "LICENSES/PolyForm-Noncommercial-1.0.0.txt",
               }

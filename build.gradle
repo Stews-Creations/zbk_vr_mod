@@ -43,6 +43,6 @@ java {
 
 tasks.withType(Jar).configureEach {
     from(project.projectDir) {
-        include "LICENSE.md", "NOTICE", "MEDIA_PERMISSION.md", "LICENSES/**"
+        include "LICENSES/**"
     }
 }
