@@ -12,6 +12,7 @@
     "sources": "https://github.com/Stews-Creations/zbk_vr_mod",
     "issues": "https://github.com/Stews-Creations/zbk_vr_mod/issues"
   },
+  "license": "PolyForm-Noncommercial-1.0.0 with ZBK media permission (see LICENSE.md)",
   "environment": "client",
   "entrypoints": {
     "client": [

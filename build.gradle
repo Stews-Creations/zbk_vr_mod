@@ -40,3 +40,9 @@ java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
 }
+
+tasks.withType(Jar).configureEach {
+    from(project.projectDir) {
+        include "LICENSE.md", "NOTICE", "MEDIA_PERMISSION.md", "LICENSES/**"
+    }
+}

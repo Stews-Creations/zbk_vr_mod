@@ -33,7 +33,7 @@ The installable artifact is:
 build/libs/zbk-vivecraft-offhand-aim-0.3.0.jar
 ```
 
-The accompanying `-sources.jar` is for development, not installation. Build output and dependency caches are ignored; required wrapper files remain tracked.
+The accompanying `-sources.jar` is for development, not installation. Both JARs include the license texts, attribution notice, and media permission. Build output and dependency caches are ignored; required wrapper files remain tracked.
 
 ## Install
 
@@ -68,3 +68,12 @@ Check aiming, menus, wrist HUD, and disabled-mode behavior in Vivecraft after ch
 ## Source
 
 Source, resources, Gradle build configuration, and wrapper files are tracked. Local client profiles, generated JARs, and caches are excluded. No Blockbench projects or map assets are included.
+
+## License and credit
+
+Free noncommercial use, modification, and sharing are allowed with credit to
+[MiniStew](https://www.youtube.com/@MiniStew). Monetized videos and streams are
+allowed under the [media permission](MEDIA_PERMISSION.md). Selling covered ZBK
+content or maps containing it, or charging for server access, is not covered
+by that permission. See [licensing and attribution](LICENSE.md) for the code
+and asset licenses, their scope, and redistribution requirements.
