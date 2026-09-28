@@ -12,7 +12,7 @@ This client-only mod is optional for ZBK. Non-VR players and dedicated servers d
 | Fabric Loader | Built with 0.19.3; mod metadata requires 0.19.3 or newer |
 | Vivecraft Fabric | 26.2-1.3.15 |
 | Java | 25 |
-| Mod version | 0.3.0 |
+| Mod version | Local builds use `mod_version` in `gradle.properties`; releases use the chosen tag |
 
 Build versions are maintained in [gradle.properties](gradle.properties), and client requirements are declared in [fabric.mod.json](src/main/resources/fabric.mod.json). The Gradle wrapper and Fabric Loom versions are pinned in the build files. A matching ZBK datapack and resource pack provide gameplay and presentation; this mod supplies client integration only.
 
@@ -30,14 +30,14 @@ On Linux or macOS, use `./gradlew build`. The wrapper downloads the pinned Gradl
 The installable artifact is:
 
 ```text
-build/libs/zbk-vivecraft-offhand-aim-0.3.0.jar
+build/libs/zbk-vivecraft-offhand-aim-<version>.jar
 ```
 
 The accompanying `-sources.jar` is for development, not installation. Both JARs include the license texts, attribution notice, and media permission. Build output and dependency caches are ignored; required wrapper files remain tracked.
 
 ### Release
 
-The [release workflow](.github/workflows/release.yml) builds the mod with Java 25 and publishes only the installable JAR as a GitHub release asset. From the repository's Actions tab, run **Release VR mod** on `main` and enter a tag such as `v0.3.0`. The tag version must match `mod_version` in `gradle.properties`. For a new tag, the workflow builds and verifies the JAR before creating the tag and release. An existing tag selects that tagged revision. The sources JAR is built for development but is not attached to the release.
+The [release workflow](.github/workflows/release.yml) builds the mod with Java 25 and publishes only the installable JAR as a GitHub release asset. From the repository's Actions tab, run **Release VR mod** on `main` and enter the desired `vMAJOR.MINOR.PATCH` tag. The workflow uses that tag as the JAR and mod metadata version, overriding the local build default in `gradle.properties`. For a new tag, it builds and verifies the JAR before creating the tag and release. An existing tag selects that tagged revision. The sources JAR is built for development but is not attached to the release.
 
 ## Install
 
