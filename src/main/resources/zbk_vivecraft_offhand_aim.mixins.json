@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.stews_zbk.vivecraftaim.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "GuiHandlerAimMixin",
+    "VRDataAimMixin",
+    "VRPlayerLookMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "zbk_vivecraft_offhand_aim",
+  "version": "${version}",
+  "name": "ZBK Vivecraft Offhand Aim",
+  "description": "Makes Vivecraft use the offhand controller as the aim device for Zombies Build Kit.",
+  "authors": [
+    "Stew",
+    "Codex"
+  ],
+  "contact": {
+    "sources": "https://github.com/Stews-Creations/zbk_vr_mod",
+    "issues": "https://github.com/Stews-Creations/zbk_vr_mod/issues"
+  },
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.stews_zbk.vivecraftaim.ZbkVivecraftOffhandAimClient"
+    ]
+  },
+  "mixins": [
+    "zbk_vivecraft_offhand_aim.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": ["26.2.x"],
+    "java": ">=25",
+    "vivecraft": "26.2-1.3.15"
+  }
+}
